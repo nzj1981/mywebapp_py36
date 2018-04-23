@@ -68,6 +68,7 @@ github地址:
     conda install aiohttp
     conda install jinja2
     pip install aiomysql
+    pip install asyncio
 查看已安装的第三方库
 
     conda list
