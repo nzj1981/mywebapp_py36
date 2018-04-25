@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test users - mywebapp_py36</title>
+</head>
+<body>
+    <h1>All users</h1>
+    {% for u in users %}
+        <p>{{ u.name }} / {{ u.email }}</p>
+    {% endfor %}
+<p>
+    <h2>blog</h2>
+    <p><h3>标题：{{blogs.name}}</h3></p>
+    <p><h4>作者：{{blogs.user_name}}</h4></p>
+    <p><h3>&nbsp;&nbsp;{{blogs.content}}</h3></p>
+</p>
+</body>
+</html>
