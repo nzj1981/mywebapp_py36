@@ -193,4 +193,52 @@ pyuser用户：
 
     1.在handlers中加入url请求地址，也就是控制层
     2.在templates目录中创建test.html，也就是展现层。
+
+十一. 构建前端
+
+    static/
+    +--css/
+    |  +--addons/
+    |  |  +--uikit.addons.min.css
+    |  |  +--uikit.almost-flat.addons.min.css
+    |  |  +--uikit.gradient.addons.min.css
+    |  +--awesome.css
+    |  +--uikit.almost-flat.addons.min.css
+    |  +--uikit.gradient.addons.min.css
+    |  +--uikit.min.css 
+    +--fonts/
+    |  +--fontawesome-webfont.eot
+    |  +--fontawesome-webfont.ttf
+    |  +--fontawesome-webfont.woff
+    |  +--FontAwesome.otf
+    +--img
+    |  +--user.png
+    +--js/
+    |  +--awesome.js
+    |  +--html5.js
+    |  +--jquery.min.js
+    |  +--uikit.min.js
+    |  +--sha1.min.js
+    |  +--sticky.min.js
+    |  +--vue.min.js
+    +--README
+    
+    
+    继承模板：{% extends 'base.html' %}
+    子页面定义：{% block meta %}...{% endblock %}
+    覆盖页面的标题:{% block title %}...{% endblock %}
+    子页面在<head>标签关闭前插入javascript代码
+    {% block beforehead %}...{% endblock %}
+    子页面的content布局和内容
+    {% block content %}
+    ...
+    {% endblock %}
+
+11.1 构建基本模板
+
+    基本模板：__base__.html
+    
+    日志模板：blogs.html
+
+    
     

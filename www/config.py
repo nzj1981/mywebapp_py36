@@ -74,4 +74,4 @@ except ImportError:
 
 configs = toDict(configs)
 
-# print(type(configs.db))
+# print(type(configs.db),configs.db['host'])

@@ -18,13 +18,14 @@ Override configurations
 用于正式环境的配置文件
 '''
 
-configs = {
-    'db': {
-        'host': '127.0.0.1',
-        'port': 8094,
-        'user': 'pyuser',
-        'password': 'pyuser123',
-        'db': 'awesome'
-    }
-}
+# configs = {
+#     'db': {
+#         'host': '10.120.21.227',
+#         'port': 3306,
+#         'user': 'pyuser',
+#         'password': 'pyuser123',
+#         'db': 'awesome'
+#     }
+# }
 
+configs = {}

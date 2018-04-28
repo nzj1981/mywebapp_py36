@@ -20,12 +20,16 @@ test table user
 import orm, asyncio
 from config import configs
 from models import User
+import hmac
+
+# 给密码加密
+def hmac_md5(key, s):
+    return hmac.new(key.encode('utf-8'), s.encode('utf-8'), 'MD5').hexdigest()
 
 
 # print(configs.get('db'), type(configs.get('db')))
 
-
-u = User(name='Test2', email='test2@126.com', passwd='123456', image='about:blank')
+u = User(name='nzj', email='test555@163.com', passwd=hmac_md5('test333@163.com', '12345'), image='about:blank')
 u2 = User(id='001524538558302fbd63b3e20a74dcea9859ca7cf03481e000', name='Test2', email='test1@126.com', passwd='abcd132', image='about:blank', admin=0, created_at=1524538558.3028)
 
 loop = asyncio.get_event_loop()
@@ -36,4 +40,4 @@ print(rs)
 rs1 = loop.run_until_complete(orm.select('select * from users', None))
 print("list: %s" % rs1)
 loop.run_until_complete(orm.close_pool())
-loop.run_forever()
+# loop.run_forever()

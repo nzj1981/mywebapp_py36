@@ -149,7 +149,7 @@ async def init(loop):
     logging.info('app server started at http://%s:%s...' % (configs.server['host'], configs.server['port']))
     return srv
 
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(init(loop))
-loop.run_forever()
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(init(loop))
+    loop.run_forever()

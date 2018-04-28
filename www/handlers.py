@@ -20,17 +20,32 @@ url handlers
 import re, time, json, logging, hashlib, base64, asyncio
 
 from coroweb import get, post
-from models import User, Comment, Blog, next_id
+from models import User, Comment, Blog
 
+
+# @get('/')
+# async def index(request):
+#     users = await User.findAll()
+#     blogs = await Blog.find('0015246275670282790f1d86ce04c768501391fd6f1acc7000')
+#     u = await User.findNumber('id', 'name = ?', 'Test2')
+#     print(u)
+#     return {
+#         '__template__': 'index.html',
+#         'users': users,
+#         'blogs': blogs
+#     }
 
 @get('/')
 async def index(request):
-    users = await User.findAll()
-    blogs = await Blog.find('0015246275670282790f1d86ce04c768501391fd6f1acc7000')
-    u = await User.findNumber('id', 'name = ?', 'Test2')
-    print(u)
+    blogs = await Blog.findAll()
+
     return {
-        '__template__': 'index.html',
-        'users': users,
+        '__template__': 'blogs.html',
         'blogs': blogs
+    }
+
+@get('/manage/')
+def manage(request):
+    return {
+        '__template__': 'manage.html'
     }
