@@ -240,5 +240,41 @@ pyuser用户：
     
     日志模板：blogs.html
 
+12. 编写API
     
+    
+    在handlers.py
+    增加以下：
+    @get('/api/users')
+        async def api_get_users():
+        users = await User.findAll(orderBy='created_at desc')
+        return dict(users=users)
+    在浏览器输入：
+    http://127.0.0.1:9000/api/users
+    
+13. 注册与登录
+
+13.1 注册并设置cookie
+    
+    增加注册模板:register.html
+    在handlers.py增加注册请求：
+    1).@get('/register')
+       def register():
+    2).@post('/api/users')
+       async def api_register_user
+    3).def user2cookie(user, max_age):
+    
+13.2 登录并设置cookie
+
+    增加登录模板：signin.html
+    在handlers.py增加登录请求：
+    1).@get('/signin')
+       def signin():
+    2).@post('/api/authenticate')
+       async def authenticate(*, email, passwd):
+    3).def user2cookie(user, max_age):
+    
+13.3 用户退出并取消cookie
+    
+    修改基础模板用户状态信息(__base__.html)
     

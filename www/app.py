@@ -73,7 +73,7 @@ async def data_factory(app, handler):
             elif request.content_type.startswith('application/x-www-form-urlencoded'):
                 request.__data__ = await request.post()
                 logging.info('request form: %s' % str(request.__data__))
-        return (await handler(request))
+        return await handler(request)
     return parse_data
 
 
@@ -145,8 +145,8 @@ async def init(loop):
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'handlers')
     add_static(app)
-    srv = await loop.create_server(app.make_handler(), configs.server['host'], configs.server['port'])
-    logging.info('app server started at http://%s:%s...' % (configs.server['host'], configs.server['port']))
+    srv = await loop.create_server(app.make_handler(), configs.server.host, configs.server.port)
+    logging.info('app server started at http://%s:%s...' % (configs.server.host, configs.server.port))
     return srv
 
 if __name__ == '__main__':
