@@ -277,4 +277,10 @@ pyuser用户：
 13.3 用户退出并取消cookie
     
     修改基础模板用户状态信息(__base__.html)
-    
+    1).解析cookie在handlers.py
+    async cookie2user(cookie_str)
+    2).把登录用户绑定在request对象上写在app.py
+    1>.async def auth_factory(app, handler)
+    2>.app = web.Application(loop=loop, middlewares=[logger_factory, response_factory, auth_factory])
+    3>.在def response_factory(app, handler):方法判断r是否dict实例else加入
+     r['__user__'] = request.__user__

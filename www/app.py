@@ -30,17 +30,18 @@ from jinja2 import Environment, FileSystemLoader
 import orm
 from config import configs
 from coroweb import add_routes, add_static
+from handlers import cookie2user, COOKIE_NAME
 
 
 def init_jinja2(app, **kw):
     logging.info('init jinja2...')
     options = dict(
-        autoescape = kw.get('autoescape', True),
-        block_start_string = kw.get('block_start_string', '{%'),
-        block_end_string = kw.get('block_end_string', '%}'),
-        variable_start_string = kw.get('variable_start_string', '{{'),
-        variable_end_string = kw.get('variable_end_string', '}}'),
-        auto_reload = kw.get('auto_reload', True)
+        autoescape=kw.get('autoescape', True),
+        block_start_string=kw.get('block_start_string', '{%'),
+        block_end_string=kw.get('block_end_string', '%}'),
+        variable_start_string=kw.get('variable_start_string', '{{'),
+        variable_end_string=kw.get('variable_end_string', '}}'),
+        auto_reload=kw.get('auto_reload', True)
     )
 
     path = kw.get('path', None)
@@ -54,13 +55,14 @@ def init_jinja2(app, **kw):
     if filters is not None:
         for name, f in filters.items():
             env.filters[name] = f
-    app['__templating__'] = env
+    app["__templating__"] = env
 
 
 async def logger_factory(app, handler):
     async def logger(request):
         logging.info('Request: %s %s' % (request.method, request.path))
-        return (await handler(request))
+        return await handler(request)
+
     return logger
 
 
@@ -74,6 +76,7 @@ async def data_factory(app, handler):
                 request.__data__ = await request.post()
                 logging.info('request form: %s' % str(request.__data__))
         return await handler(request)
+
     return parse_data
 
 
@@ -100,27 +103,48 @@ async def response_factory(app, handler):
         if isinstance(r, dict):
             template = r.get('__template__')
             if template is None:
-                resp = web.Response(body=json.dumps(r, ensure_ascii=False, default=lambda o: o.__dict__).encode('utf-8'))
+                resp = web.Response(
+                    body=json.dumps(r, ensure_ascii=False, default=lambda o: o.__dict__).encode('utf-8'))
                 resp.content_type = 'application/json;charset=utf-8'
                 return resp
             else:
-                resp = web.Response(body=app['__templating__'].get_template(template).render(**r).encode('utf-8'))
+                r['__user__'] = request.__user__
+                resp = web.Response(body=app["__templating__"].get_template(template).render(**r).encode('utf-8'))
                 resp.content_type = 'text/html;charset=utf-8'
                 return resp
 
-        if isinstance(r, int) and r >= 100 and r < 600:
+        if isinstance(r, int) and 100 <= r < 600:
             return web.Response(r)
 
         if isinstance(r, tuple) and len(r) == 2:
             t, m = r
-            if isinstance(t, int) and t >= 100 and t < 600:
+            if isinstance(t, int) and 100 <= t < 600:
                 return web.Response(t, str(m))
 
         # default
         resp = web.Response(body=str(r).encode('utf-8'))
         resp.content_type = 'text/plain;charset=utf-8'
         return resp
+
     return response
+
+
+# 把用户绑定在request对象上
+async def auth_factory(app, handler):
+    async def auth(request):
+        logging.info('check user: %s %s' % (request.method, request.path))
+        request.__user__ = None
+        cookie_str = request.cookies.get(COOKIE_NAME)
+        if cookie_str:
+            user = await cookie2user(cookie_str)
+            if user:
+                logging.info('set current user: %s' % user.email)
+                request.__user__ = user
+        if request.path.startswith('/manage/') and (request.__user__ is None or not request.__user__.admin):
+            return web.HTTPFound('/signin')
+        return await handler(request)
+
+    return auth
 
 
 def datetime_filter(t):
@@ -140,7 +164,7 @@ def datetime_filter(t):
 async def init(loop):
     await orm.create_pool(loop=loop, **configs.db)
     app = web.Application(loop=loop, middlewares=[
-        logger_factory, response_factory
+        logger_factory, auth_factory, data_factory, response_factory
     ])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'handlers')
@@ -148,6 +172,7 @@ async def init(loop):
     srv = await loop.create_server(app.make_handler(), configs.server.host, configs.server.port)
     logging.info('app server started at http://%s:%s...' % (configs.server.host, configs.server.port))
     return srv
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
