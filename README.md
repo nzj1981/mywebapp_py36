@@ -284,3 +284,20 @@ pyuser用户：
     2>.app = web.Application(loop=loop, middlewares=[logger_factory, response_factory, auth_factory])
     3>.在def response_factory(app, handler):方法判断r是否dict实例else加入
      r['__user__'] = request.__user__
+
+
+14. 编写日志创建页
+
+    利用MVVM模式：Model View ViewModel
+    1).创建日志编辑模板
+    manage_blog_edit.html
+    2).在handlers.py新增
+    1>.用户权限设置
+    def check_admin(request):
+    2>.分页设置
+    def get_page_index(page_str):
+    3>.创建日志展现页面并带有评论
+    创建blog.html
+    @get('/blog/{id}')
+    async def get_blog(id):
+    新增markdown2组件
