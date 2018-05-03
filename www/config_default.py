@@ -21,7 +21,7 @@ Default configurations
 configs = {
     'debug': True,
     'db': {
-        'host': '*****',
+        'host': '___',
         'port': 8094,
         'user': 'pyuser',
         'password': 'pyuser123',
