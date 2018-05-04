@@ -5,9 +5,8 @@
 {% block beforehead %}
 <script>
     var
-        ID = '{{ id }}',
+        ID = '{{ id }}';
         action = '{{ action }}';
-
     function initVM(blog) {
         var vm = new Vue({
             el: '#vm',
@@ -21,7 +20,8 @@
                             $form.showFormError(err)
                         }
                         else {
-                            return location.assign('/api/blogs/' + r.id)
+                            alert(`${r.name}添加成功！`);
+                            return location.assign('/manage/blogs')
                         }
 
                     });
