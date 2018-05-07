@@ -19,6 +19,7 @@ test table user
 import orm, asyncio
 from config import configs
 from models import Blog, Comment
+import aiomysql
 
 # print(configs.get('db'), type(configs.get('db')))
 
@@ -89,9 +90,9 @@ loop.run_until_complete(orm.create_pool(loop=loop, **configs.db))
 # print("list: %s" % rs1)
 
 # comment conntent add
-rs = loop.run_until_complete(comments.save())
-print('comments save ok', rs)
-rs1 = loop.run_until_complete(orm.select('select * from blogs', None))
+# rs = loop.run_until_complete(comments.save())
+# print('comments save ok', rs)
+rs1 = loop.run_until_complete(Blog.findNumber('count(id)', where='user_id= ?', args=('a',)))
 print("list: %s" % rs1)
 loop.run_until_complete(orm.close_pool())
 # loop.run_forever()

@@ -5,23 +5,35 @@
 {% block beforehead %}
 <script>
     var
-        ID = '{{ id }}';
+        ID = '{{ id }}',
         action = '{{ action }}';
+
     function initVM(blog) {
         var vm = new Vue({
             el: '#vm',
             data: blog,
             methods: {
                 submit: function (event) {
+
                     event.preventDefault();
+
                     var $form = $('#vm').find('form');
+
                     $form.postJSON(action, this.$data, function (err, r) {
                         if (err) {
-                            $form.showFormError(err)
+                            $form.showFormError(err);
                         }
                         else {
-                            alert(`${r.name}添加成功！`);
-                            return location.assign('/manage/blogs')
+                            if (ID) {
+
+                                alert(`${r.name}修改成功！`);
+                            }
+                            else {
+
+                                alert(`${r.name}添加成功！`);
+                            }
+
+                            return location.assign('/manage/blogs');
                         }
 
                     });
@@ -33,17 +45,22 @@
 
 
     $(function () {
+
         if (ID) {
             getJSON('/api/blogs/' + ID, function (err, blog) {
+
                 if (err) {
-                    return fatal(err)
+                    alert('error');
+                    return fatal(err);
                 }
+
                 $('#loading').hide();
                 initVM(blog);
             });
         }
         else {
             $('#loading').hide();
+
             initVM({
                 name: '',
                 summary: '',

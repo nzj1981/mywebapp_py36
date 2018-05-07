@@ -252,6 +252,43 @@ def manage_create_blog():
     }
 
 
+
+# blogs list page
+@get('/api/blogs')
+async def api_blogs(request, *, page='1'):
+    page_index = get_page_index(page)
+    user = request.__user__
+    if user.admin == 1:
+        num = await Blog.findNumber('count(id)')
+    else:
+        num = await Blog.findNumber('count(id)', where='user_id=?', args=(user.id))
+    print('************', num)
+    p = Page(num, page_index)
+
+    if num == 0:
+        return dict(page=p, blogs=())
+    if user.admin == 1:
+        blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    else:
+        blogs = await Blog.findAll(
+            where='user_id=?',
+            args=[user.id],
+            orderBy='created_at desc',
+            limit=(p.offset, p.limit)
+        )
+
+    return dict(page=p, blogs=blogs)
+
+
+
+# blog to show of get
+@get('/api/blogs/{id}')
+async def api_get_blog(*, id):
+    blog = await Blog.find(id)
+    return blog
+
+
+
 # 日志编辑页面
 @get('/manage/blogs/edit')
 def manage_edit_blog(*, id):
@@ -306,28 +343,4 @@ async def api_delete_blog(request, *, id):
     blog = await Blog.find(id)
     await blog.remove()
     return dict(id=id)
-
-
-# blog to show of get
-@get('/api/blogs/{id}')
-async def api_get_blog(*, id):
-    blog = Blog.find(id)
-    return blog
-
-
-# blogs list page
-@get('/api/blogs')
-async def api_blogs(*, page='1'):
-    page_index = get_page_index(page)
-    num = await Blog.findNumber('count(id)')
-    p = Page(num, page_index)
-
-    if num == 0:
-        return dict(page=p, blogs=())
-
-    blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
-
-    return dict(page=p, blogs=blogs)
-
-
 
