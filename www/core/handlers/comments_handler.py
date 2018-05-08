@@ -6,7 +6,7 @@
 @contact: 18322313385@163.com 
 @site: https://github.com/nzj1981/mywebapp_py36.git 
 @software: PyCharm 
-@file: comments_handlers.py
+@file: comments_handler.py
 @time: 2018/5/7 13:15
 """
 
@@ -18,10 +18,9 @@ comments handlers
 
 
 from coroweb import get, post
-from aiohttp import web
-from apis import Page, APIValueError, APIError, APIPermissionError, APIResourceNotFoundError
-from handlers import get_page_index
-from models import Comment, Blog
+from checks.apis import Page, APIValueError, APIPermissionError, APIResourceNotFoundError
+from core.handlers.handler import get_page_index
+from db.models.model import Comment, Blog
 
 
 

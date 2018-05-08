@@ -16,10 +16,10 @@ __author__ = 'autumner'
 test table user
 '''
 
-import orm, asyncio
-from config import configs
-from models import Blog, Comment
-import aiomysql
+import asyncio
+from db import orm
+from conf.config import configs
+from db.models.model import Blog, Comment
 
 # print(configs.get('db'), type(configs.get('db')))
 
@@ -92,7 +92,7 @@ loop.run_until_complete(orm.create_pool(loop=loop, **configs.db))
 # comment conntent add
 # rs = loop.run_until_complete(comments.save())
 # print('comments save ok', rs)
-rs1 = loop.run_until_complete(Blog.findNumber('count(id)', where='user_id= ?', args=('a',)))
+rs1 = loop.run_until_complete(Blog.findNumber('count(id)', where='user_id= ?', args=('001525243084107263a9a60789346c5bc95518be3043922000',)))
 print("list: %s" % rs1)
 loop.run_until_complete(orm.close_pool())
 # loop.run_forever()

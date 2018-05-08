@@ -6,7 +6,7 @@
 @contact: 18322313385@163.com
 @site: https://github.com/nzj1981/mywebapp_py36.git
 @software: PyCharm
-@file: models.py
+@file: model.py
 @time: 2018/4/23 16:56
 """
 
@@ -19,7 +19,7 @@ create Models for user, blog, comment.
 import time
 import uuid
 
-from orm import Model, StringField, BooleanField, FloatField, TextField
+from db.orm import Model, StringField, BooleanField, FloatField, TextField
 
 
 def next_id():

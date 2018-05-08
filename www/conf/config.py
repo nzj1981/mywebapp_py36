@@ -17,9 +17,6 @@ Configuration
 全局配置文件
 '''
 
-import config_default
-
-
 class Dict(dict):
     '''
     Simple dict but support access as x.y style.
@@ -63,10 +60,14 @@ def toDict(d):
     return D
 
 
-configs = config_default.configs
+try:
+    from conf import config_default
+    configs = config_default.configs
+except ImportError:
+    pass
 
 try:
-    import config_override
+    from conf import config_override, config_default
 
     configs = merge(configs, config_override.configs)
 except ImportError:

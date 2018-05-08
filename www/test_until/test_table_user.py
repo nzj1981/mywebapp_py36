@@ -17,9 +17,10 @@ __author__ = 'autumner'
 test table user
 '''
 
-import orm, asyncio
-from config import configs
-from models import User
+import asyncio
+from db import orm
+from conf.config import configs
+from db.models.model import User
 import hmac
 
 # 给密码加密

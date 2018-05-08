@@ -6,7 +6,7 @@
 @contact: 18322313385@163.com 
 @site: https://github.com/nzj1981/mywebapp_py36.git 
 @software: PyCharm 
-@file: handlers.py 
+@file: handler.py
 @time: 2018/4/25 16:08
 """
 
@@ -17,13 +17,13 @@ url handlers
 '''
 
 
-import re, time, json, logging, hashlib, base64, asyncio
+import re, time, json, logging, hashlib
 import markdown2
 from aiohttp import web
 from coroweb import get, post
-from models import User, Comment, Blog, next_id
-from apis import APIValueError, APIResourceNotFoundError, APIError, APIPermissionError, Page
-from config import configs
+from db.models.model import User, Comment, Blog, next_id
+from checks.apis import APIValueError, APIError, APIPermissionError, Page
+from conf.config import configs
 
 
 # set cookie name
@@ -53,11 +53,6 @@ def get_page_index(page_str):
 def text2html(text):
     lines = map(lambda s: '<p>%s<p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
     return ''.join(lines)
-
-
-
-
-
 
 # user to cookie and set max time
 def user2cookie(user, max_age):
@@ -176,7 +171,6 @@ def signin():
     }
 
 
-
 @post('/api/authenticate')
 async def authenticate(*, email, passwd):
     if not email:
@@ -262,7 +256,6 @@ async def api_blogs(request, *, page='1'):
         num = await Blog.findNumber('count(id)')
     else:
         num = await Blog.findNumber('count(id)', where='user_id=?', args=(user.id))
-    print('************', num)
     p = Page(num, page_index)
 
     if num == 0:

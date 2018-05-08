@@ -27,10 +27,10 @@ from datetime import datetime
 from aiohttp import web
 from jinja2 import Environment, FileSystemLoader
 
-import orm
-from config import configs
+from db import orm
+from conf.config import configs
 from coroweb import add_routes, add_static
-from handlers import cookie2user, COOKIE_NAME
+from core.handlers.handler import cookie2user, COOKIE_NAME
 
 
 def init_jinja2(app, **kw):
@@ -167,8 +167,8 @@ async def init(loop):
         logger_factory, auth_factory, data_factory, response_factory
     ])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
-    add_routes(app, 'handlers')
-    add_routes(app, 'comments_handlers')
+    add_routes(app, 'core.handlers.handler')
+    add_routes(app, 'core.handlers.comments_handler')
     add_static(app)
     srv = await loop.create_server(app.make_handler(), configs.server.host, configs.server.port)
     logging.info('app server started at http://%s:%s...' % (configs.server.host, configs.server.port))
