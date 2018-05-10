@@ -168,6 +168,8 @@ async def init(loop):
     ])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'core.handlers.handler')
+    add_routes(app, 'core.handlers.users_handler')
+    add_routes(app, 'core.handlers.blogs_handler')
     add_routes(app, 'core.handlers.comments_handler')
     add_static(app)
     srv = await loop.create_server(app.make_handler(), configs.server.host, configs.server.port)

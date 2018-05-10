@@ -19,19 +19,25 @@ comments handlers
 
 from coroweb import get, post
 from checks.apis import Page, APIValueError, APIPermissionError, APIResourceNotFoundError
-from core.handlers.handler import get_page_index
+from core.handlers.handler import get_page_index, check_admin
 from db.models.model import Comment, Blog
 
 
-
 @get('/api/comments')
-async def api_comments(*, page='1'):
+async def api_comments(request, *, page='1'):
     page_index = get_page_index(page)
-    num = await Comment.findNumber('count(id)')
+    user = request.__user__
+    if user.admin == 1:
+        num = await Comment.findNumber('count(id)')
+    else:
+        num = await Comment.findNumber('count(id)', where='user_id=?', args=(user.id,))
     p = Page(num, page_index)
     if num == 0:
         return dict(page=p, comments=())
-    comments = await Comment.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    if user.admin == 1:
+        comments = await Comment.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    else:
+        comments = await Comment.findAll(orderBy='created_at desc', limit=(p.offset, p.limit), where='user_id=?', args=[user.id])
     return dict(page=p, comments=comments)
 
 
@@ -56,3 +62,26 @@ async def api_create_comment(id, request, *, content):
     return comment
 
 
+# 评论列表管理
+@get('/manage/')
+def manage():
+    return 'redirect:/manage/comments'
+
+
+@get('/manage/comments')
+def manage_comments(*, page='1'):
+    return {
+        '__template__': 'manage_comments.html',
+        'page_index': get_page_index(page)
+    }
+
+
+# 评论删除
+@post('/api/comments/{id}/delete')
+async def api_delete_comments(id, request):
+    check_admin(request)
+    c = await Comment.find(id)
+    if c is None:
+        raise APIResourceNotFoundError('Comment', 'Comment content is empty.')
+    await c.remove()
+    return dict(id=id)
