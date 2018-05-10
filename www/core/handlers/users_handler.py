@@ -21,15 +21,9 @@ import re, json, logging, hashlib
 from aiohttp import web
 from coroweb import get, post
 from db.models.model import User, next_id
-from checks.apis import APIValueError, APIError
-from core.handlers.handler import user2cookie, COOKIE_NAME
+from checks.apis import APIValueError, APIError, Page
+from core.handlers.handler import user2cookie, COOKIE_NAME, get_page_index
 
-
-
-@get('/api/users')
-async def api_get_users():
-    users = await User.findAll(orderBy='created_at desc')
-    return dict(users=users)
 
 
 @get('/register')
@@ -123,3 +117,28 @@ def signout(request):
     logging.info('user signed out.')
     return r
 
+
+# 用户管理页面
+@get('/manage/users')
+def manage_users(*, page='1'):
+    return {
+        '__template__': 'manage_users.html',
+        'page_index': get_page_index(page)
+    }
+
+
+# 用户管理列表JSON
+@get('/api/users')
+async def api_get_users(request, *, page='1'):
+    page_index = get_page_index(page)
+    req_user = request.__user__
+    if req_user.admin == 1:
+        num = await User.findNumber('count(id)')
+    elif req_user.admin == 2:
+        num = await User.findNumber('count(id)', where='admin in (?,?)', args=(0, 2))
+    p = Page(num, page_index)
+    if req_user.admin == 1:
+        users = await User.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    elif req_user.admin == 2:
+        users = await User.findAll(where='admin in (?,?)', args=[0, 2], orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, users=users)
