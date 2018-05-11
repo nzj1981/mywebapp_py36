@@ -123,7 +123,8 @@ def signout(request):
 def manage_users(*, page='1'):
     return {
         '__template__': 'manage_users.html',
-        'page_index': get_page_index(page)
+        'page_index': get_page_index(page),
+        'title': '用户管理'
     }
 
 
@@ -139,6 +140,10 @@ async def api_get_users(request, *, page='1'):
     p = Page(num, page_index)
     if req_user.admin == 1:
         users = await User.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+        for u in users:
+            u.passwd = '******'
     elif req_user.admin == 2:
         users = await User.findAll(where='admin in (?,?)', args=[0, 2], orderBy='created_at desc', limit=(p.offset, p.limit))
+        for u in users:
+            u.passwd = '******'
     return dict(page=p, users=users)

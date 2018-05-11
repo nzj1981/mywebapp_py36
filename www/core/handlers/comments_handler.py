@@ -72,7 +72,8 @@ def manage():
 def manage_comments(*, page='1'):
     return {
         '__template__': 'manage_comments.html',
-        'page_index': get_page_index(page)
+        'page_index': get_page_index(page),
+        'title': '评论管理'
     }
 
 

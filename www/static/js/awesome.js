@@ -26,6 +26,14 @@ if (!String.prototype.trim) {
 }
 
 
+if (!String.prototype.shortMessage){
+    String.prototype.shortMessage = function (message) {
+        var maxLen = 20;
+        return this.message.length > maxLen ? this.message.substring(0, maxLen) + '...': this.message;
+    };
+}
+
+
 if (!Number.prototype.toDateTime) {
     var replaces = {
         'yyyy': function (dt) {

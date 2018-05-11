@@ -1,6 +1,6 @@
-{% extends '__base__.html' %}
+{% extends '__manage__.html' %}
 
-{% block title %}日志管理列表{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block beforehead %}
 <script>
@@ -50,26 +50,16 @@ $(function () {
 
 {% block content %}
 
-    <div class="uk-width-1-1 uk-margin-bottom">
-        <div class="uk-panel uk-panel-box">
-            <ul class="uk-breadcrumb">
-                <li><a href="/manage/comments"><i class="uk-icon-comment"></i> 评论</a> </li>
-                <li class="uk-active"><span><i class="uk-icon-weibo"></i> 日志</span></li>
-                <li><a href="/manage/users"><i class="uk-icon-users"></i> 用户</a> </li>
-            </ul>
-        </div>
-    </div>
+
+    <div id="error" class="uk-width-medium-3-4"></div>
 
 
-    <div id="error" class="uk-width-1-1"></div>
-
-
-    <div id="loading" class="uk-width-1-1 uk-text-center">
+    <div id="loading" class="uk-width-medium-3-4 uk-text-center">
         <span><i class="uk-icon-spinner uk-icon-medium uk-icon-spin"></i> 正在加载...</span>
     </div>
 
 
-    <div id="vm" class="uk-width-1-1">
+    <div id="vm" class="uk-width-medium-3-4">
         <a href="/manage/blogs/create" class="uk-button uk-button-primary"><i class="uk-icon-plus"></i> 新日志</a>
 
 
@@ -79,7 +69,7 @@ $(function () {
                 <th class="uk-width-5-10">标题&nbsp;/&nbsp;摘要</th>
                 <th class="uk-width-2-10">作者</th>
                 <th class="uk-width-2-10">创建时间</th>
-                <th class="uk-width-1-10">操作</th>
+                <th class="uk-width-medium-3-40">操作</th>
             </tr>
             </thead>
             <tbody>

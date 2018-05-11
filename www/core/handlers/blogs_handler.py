@@ -62,7 +62,8 @@ async def get_blog(id):
 def manage_blogs(*, page='1'):
     return {
         '__template__': 'manage_blogs.html',
-        'page_index': get_page_index(page)
+        'page_index': get_page_index(page),
+        'title': '日志管理'
     }
 
 
@@ -72,7 +73,8 @@ def manage_create_blog():
     return {
         '__template__': 'manage_blog_edit.html',
         'id': '',
-        'action': '/api/blogs'
+        'action': '/api/blogs',
+        'title': '日志管理'
     }
 
 
