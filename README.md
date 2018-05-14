@@ -288,7 +288,7 @@ pyuser用户：
     
     日志模板：blogs.html
 
-12. 编写API
+十二. 编写API
     
     
     在handlers.py
@@ -300,7 +300,7 @@ pyuser用户：
     在浏览器输入：
     http://127.0.0.1:9000/api/users
     
-13. 注册与登录
+十三. 注册与登录
 
 13.1 注册并设置cookie
     
@@ -334,7 +334,7 @@ pyuser用户：
      r['__user__'] = request.__user__
 
 
-14. 编写日志创建页
+十四. 编写日志创建页
 
 
     利用MVVM模式：Model View ViewModel
@@ -358,7 +358,7 @@ pyuser用户：
     async def api_create_blog(request, *, name, summary, content):
     
     
-15. 编写日志列表
+十五. 编写日志列表
 
 
     1). 在apis.py创建分页类
@@ -372,4 +372,7 @@ pyuser用户：
     日志的管理页面
     @get('/manage/blogs')
     def manage_blogs(*, page='1'):
-    
+ 十六. 在开发过程开启DEBUG模式
+ 
+    安装conda install watchdog组件
+    创建pymonitor.py页面。  
