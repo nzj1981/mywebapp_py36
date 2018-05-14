@@ -34,9 +34,9 @@ class MyFileSystemEventHander(FileSystemEventHandler):
         self.restart = fn
 
     def on_any_event(self, event):
-        # if event.src_path.endswith('.py'):
-        log('Python source file changed: %s' % event.src_path)
-        self.restart()
+        if event.src_path.endswith('.py'):
+            log('Python source file changed: %s' % event.src_path)
+            self.restart()
 
 
 command = ['echo', 'ok']
@@ -90,4 +90,5 @@ if __name__ == '__main__':
 
     command = argv
     path = os.path.abspath('.')
+    print('>>>>>')
     start_watch(path, None)
