@@ -34,9 +34,9 @@ class MyFileSystemEventHander(FileSystemEventHandler):
         self.restart = fn
 
     def on_any_event(self, event):
-        if event.src_path.endswith('.py'):
-            log('Python source file changed: %s' % event.src_path)
-            self.restart()
+        # if event.src_path.endswith('.py'):
+        log('Python source file changed: %s' % event.src_path)
+        self.restart()
 
 
 command = ['echo', 'ok']
@@ -45,9 +45,8 @@ process = None
 
 def kill_process():
     global process
-
     if process:
-        log('Kill process [%s]...' % process.id)
+        log('Kill process [%s]...' % process.pid)
         process.kill()
         process.wait()
         log('Process ended with code %s.' % process.returncode)
@@ -79,8 +78,6 @@ def start_watch(path, callback):
         observer.stop()
 
     observer.join()
-
-
 if __name__ == '__main__':
     argv = sys.argv[1:]
 
@@ -88,8 +85,8 @@ if __name__ == '__main__':
         print('Usage: ./pymonitor your-script.py')
         exit(0)
 
-    if argv[0] != 'python3':
-        argv.insert(0, 'python3')
+    if argv[0] != 'python':
+        argv.insert(0, 'python')
 
     command = argv
     path = os.path.abspath('.')
